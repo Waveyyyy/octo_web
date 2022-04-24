@@ -1,2 +1,9 @@
+# Cargo things
 /target
+Cargo.lock
+
+# Jetbrains stinky poo
+.idea/
+
+# no steal my api key pls
 .env
