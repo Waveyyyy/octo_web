@@ -23,7 +23,7 @@ fn main() -> Result<()> {
         String::from("consumption"),
     );
 
-    let r = make_request(construct_uri(uri_components, goodies)
+    let r = make_request(construct_uri(uri_components, goodies, None)
         .unwrap());
 
     println!("testing: {:#?}", r.unwrap() /*["detail"]*/);

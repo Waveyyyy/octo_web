@@ -1,6 +1,8 @@
-# Cargo things
+# Cargo / fleet things
 /target
+.cargo/
 Cargo.lock
+fleet.toml
 
 # Jetbrains stinky poo
 .idea/

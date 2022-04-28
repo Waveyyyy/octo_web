@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         String::from("consumption"),
     );
 
-    let r = api_request::make_request(api_utils::construct_uri(uri_components, goodies)
+    let r = api_request::make_request(api_utils::construct_uri(uri_components, goodies, None)
         .unwrap())
         .unwrap();
 
