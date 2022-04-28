@@ -1,4 +1,4 @@
-pub fn construct_uri(uri_parts: URIstuff, secrets: APIstuff, electricity: Option<bool>) -> Result<String, ()> {
+pub fn construct_uri(uri_parts: URIstuff, secrets: APIstuff, electricity: Option<bool>) -> String {
     let uri = format!(
         "{base}{SectOne}{mpxn}{SectTwo}{serial}{SectThree}",
         base = uri_parts.base_uri,
@@ -15,7 +15,7 @@ pub fn construct_uri(uri_parts: URIstuff, secrets: APIstuff, electricity: Option
         SectThree = uri_parts.section_three
     );
 
-    Ok(uri)
+   uri
 }
 
 #[derive(Debug)]
@@ -40,6 +40,12 @@ impl APIstuff {
     }
 }
 
+impl Default for APIstuff {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[derive(Debug)]
 pub struct URIstuff {
     base_uri: String,
@@ -54,7 +60,6 @@ impl URIstuff {
     pub fn new(s_one: String, s_two: String, s_three: String) -> Self {
         Self {
             base_uri: String::from("https://api.octopus.energy/v1/"),
-            // very hacky solution for concatenating fwd slashes, TODO: consider changing
             section_one: s_one + "/",
             section_two: s_two + "/",
             section_three: s_three + "/",

@@ -1,3 +1,4 @@
+use std::process::exit;
 use serde_json::Value;
 use error_chain::error_chain;
 
@@ -25,7 +26,7 @@ pub  async fn make_request(uri: String) -> Result<Value> {
         _ => {
             // Err() doesnt work here TODO: fix Err() in make_request
             dbg!(req_resp);
-            panic!()
+            exit(1)
         }
     }
 }

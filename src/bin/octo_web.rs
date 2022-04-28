@@ -14,7 +14,7 @@ error_chain!{
 
 fn main() -> Result<()> {
     dotenv::from_filename(".env")?; // dont know if needed, pls verify
-    let goodies = APIstuff::new();
+    let goodies = APIstuff::default();
 
     // TODO: Concatenate the uri with all the relevant stuff
     let uri_components = URIstuff::new(
@@ -23,10 +23,10 @@ fn main() -> Result<()> {
         String::from("consumption"),
     );
 
-    let r = make_request(construct_uri(uri_components, goodies, None)
-        .unwrap());
+    let r = make_request(construct_uri(uri_components, goodies, None))
+        .unwrap();
 
-    println!("testing: {:#?}", r.unwrap() /*["detail"]*/);
+    println!("testing: {}", r /*["detail"]*/);
 
     Ok(())
 }
