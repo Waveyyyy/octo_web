@@ -1,16 +1,26 @@
-pub fn construct_uri(uri_parts: URIstuff, secrets: APIstuff, electricity: Option<bool>) -> String {
+use error_chain::error_chain;
+
+error_chain!{
+    foreign_links{
+        HttpRequest(reqwest::Error);
+        JsonLib(serde_json::Error);
+        EnvVars(dotenv::Error);
+    }
+}
+
+pub fn construct_uri(uri_parts: URIstuff, secrets: &APIstuff, electricity: Option<bool>) -> String {
     let uri = format!(
         "{base}{SectOne}{mpxn}{SectTwo}{serial}{SectThree}",
         base = uri_parts.base_uri,
         SectOne = uri_parts.section_one,
         mpxn = {
-            if electricity.unwrap_or(true) { secrets.e_mpan_number }
-            else { secrets.g_mprn_number }
+            if electricity.unwrap_or(true) { &secrets.e_mpan_number }
+            else { &secrets.g_mprn_number }
         },
         SectTwo = uri_parts.section_two,
         serial = {
-            if electricity.unwrap_or(true) { secrets.e_serial_number }
-            else { secrets.g_serial_number }
+            if electricity.unwrap_or(true) { &secrets.e_serial_number }
+            else { &secrets.g_serial_number }
         },
         SectThree = uri_parts.section_three
     );
@@ -20,7 +30,7 @@ pub fn construct_uri(uri_parts: URIstuff, secrets: APIstuff, electricity: Option
 
 #[derive(Debug)]
 pub struct APIstuff {
-    api_key: String,
+    pub(crate) api_key: String,
     e_mpan_number: String,
     e_serial_number: String,
     g_mprn_number: String,

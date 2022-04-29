@@ -1,16 +1,8 @@
 extern crate octo_web;
 extern crate dotenv;
 
-use error_chain::error_chain;
 use crate::octo_web::api::api_request::*;
 use crate::octo_web::api::api_utils::*;
-
-
-error_chain!{
-    foreign_links{
-        EnvVars(dotenv::Error);
-    }
-}
 
 fn main() -> Result<()> {
     dotenv::from_filename(".env")?; // dont know if needed, pls verify
@@ -23,10 +15,12 @@ fn main() -> Result<()> {
         String::from("consumption"),
     );
 
-    let r = make_request(construct_uri(uri_components, goodies, None))
+    let r = make_request(
+        construct_uri(uri_components, &goodies, None),
+        &goodies)
         .unwrap();
 
-    println!("testing: {}", r /*["detail"]*/);
+    println!("testing: {:#?}", r /*["detail"]*/);
 
     Ok(())
 }

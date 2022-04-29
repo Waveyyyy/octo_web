@@ -1,25 +1,34 @@
 use std::process::exit;
 use serde_json::Value;
-use error_chain::error_chain;
+use reqwest::Client;
 
 extern crate tokio;
-
-error_chain!{
-    foreign_links{
-        HttpRequest(reqwest::Error);
-        JsonLib(serde_json::Error);
-    }
-}
+use crate::api::api_utils::*;
 
 
 #[tokio::main]
-pub  async fn make_request(uri: String) -> Result<Value> {
-    // TODO: send api_key with request to login (basic auth username)
-    let req_resp = reqwest::get(uri).await.unwrap();
+pub async fn make_request(uri: String, secrets: &APIstuff) -> Result<Value> {
+
+    // initialise a new client
+    let  client = Client::new();
+    let  password: Option<String> = None;
+
+    // make request and await response
+    let req_resp = client
+        .get(uri)
+        .basic_auth(&secrets.api_key, password)
+        .send()
+        .await
+        .unwrap();
+
+    // Some 'error' handling
     match req_resp.status() {
         reqwest::StatusCode::OK => {
-            let data = req_resp.text().await.unwrap();
-            let raw_json: Value = serde_json::from_str(data.as_str()).unwrap();
+            let data = req_resp.text()
+                .await
+                .unwrap();
+            let raw_json: Value = serde_json::from_str(data.as_str())
+                .unwrap();
 
             Ok(raw_json)
         }
